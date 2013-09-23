@@ -19,7 +19,7 @@ from octoprint.util.avr_isp import ispBase
 
 from octoprint.settings import settings
 from octoprint.events import eventManager
-from octoprint.util import isDevVersion, getExceptionString, getNewTimeout, isGcodeFileName
+from octoprint.util import getExceptionString, getNewTimeout, isGcodeFileName
 from octoprint.util.virtual import VirtualPrinter
 
 try:
@@ -574,7 +574,7 @@ class MachineCom(object):
 							self._heatupWaitStartTime = t
 
 				##~~ SD Card handling
-				elif 'SD init fail' in line:
+				elif 'SD init fail' in line or 'volume.init failed' in line or 'openRoot failed' in line:
 					self._sdAvailable = False
 					self._sdFiles = []
 					self._callback.mcSdStateChange(self._sdAvailable)
@@ -611,6 +611,7 @@ class MachineCom(object):
 					# anwer to M28, at least on Marlin, Repetier and Sprinter: "Writing to file: %s"
 					self._printSection = "CUSTOM"
 					self._changeState(self.STATE_PRINTING)
+					line = "ok"
 				elif 'Done printing file' in line:
 					# printer is reporting file finished printing
 					self._sdFilePos = 0
@@ -645,7 +646,7 @@ class MachineCom(object):
 							pass
 
 				##~~ Parsing for pause triggers
-				if pauseTriggers:
+				if pauseTriggers and not self.isStreaming():
 					if "enable" in pauseTriggers.keys() and pauseTriggers["enable"].search(line) is not None:
 						self.setPause(True)
 					elif "disable" in pauseTriggers.keys() and pauseTriggers["disable"].search(line) is not None:
@@ -804,6 +805,7 @@ class MachineCom(object):
 					self._callback.mcFileTransferDone()
 					self._changeState(self.STATE_OPERATIONAL)
 					eventManager().fire("TransferDone", filename)
+					self.refreshSdFiles()
 				else:
 					self._callback.mcPrintjobDone()
 					self._changeState(self.STATE_OPERATIONAL)
