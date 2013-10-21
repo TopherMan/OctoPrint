@@ -118,6 +118,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                Invert controls
+                                <label class="checkbox">
+                                    <input type="checkbox" data-bind="checked: printer_invertX" id="settings-printerInvertX"> X axis
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" data-bind="checked: printer_invertY" id="settings-printerInvertY"> Y axis
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" data-bind="checked: printer_invertZ" id="settings-printerInvertZ"> Z axis
+                                </label>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="tab-pane" id="settings_webcam">
@@ -180,13 +194,6 @@
                             <div class="controls">
                                 <label class="checkbox">
                                     <input type="checkbox" data-bind="checked: feature_gcodeViewer" id="settings-featureGcodeViewer"> Enable GCode Visualizer
-                                </label>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <label class="checkbox">
-                                    <input type="checkbox" data-bind="checked: feature_invertZ" id="settings-featureInvertZ"> Invert Z axis controls
                                 </label>
                             </div>
                         </div>
